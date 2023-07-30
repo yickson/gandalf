@@ -1,10 +1,26 @@
 import { supabase } from '@/lib/supabase';
 import { ref } from 'vue';
 
-const allWorks = ref([]);
+interface ITodo {
+  id: number;
+  todo: string;
+}
+
+interface IWork {
+  id: number;
+  todos: ITodo
+}
+
+interface IPWork {
+  id: number;
+  todos: ITodo[]
+}
+
+const allWorks = ref<IWork[]>([]);
 async function fetchWorks () {
   try {
-    const { data: works, error } = await supabase.from('works')
+    // @ts-ignore
+    const { data: works, error } : { data: IWork[] | null, error: any } = await supabase.from('works')
       .select(`
         id,
         todos (id, todo)
@@ -15,11 +31,13 @@ async function fetchWorks () {
       console.log('error', error)
       return
     }
+    console.log(works);
     // handle for when no works are returned
     if (works === null) {
       allWorks.value = []
       return
     }
+    // const worksData = works[0].todos.
     // store response to allTodos
     allWorks.value = works
     console.log('got works!', allWorks.value)

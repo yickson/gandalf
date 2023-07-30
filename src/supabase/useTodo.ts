@@ -1,7 +1,12 @@
 import { supabase } from '@/lib/supabase';
 import { ref } from 'vue';
 
-const allTodos = ref([]);
+interface ITodo {
+  id: number;
+  todo: string;
+}
+
+const allTodos = ref<ITodo[]>([]);
 
 async function fetchTodos() {
   try {
